@@ -17,11 +17,14 @@
     </div>
     <div v-if="selectedCity" class="mt-4 p-4 bg-zinc-900 rounded-md">
       <h3 class="text-md font-semibold mb-2">
-        Selected City:
+        Selected birth location
       </h3>
-      <p class="text-sm"><strong>Name:</strong> {{ selectedCity.display_name }}</p>
+      <p class="text-sm"><strong>City name:</strong> {{ selectedCity.display_name }}</p>
       <p class="text-sm"><strong>Latitude:</strong> {{ selectedCity.lat }}</p>
       <p class="text-sm"><strong>Longitude:</strong> {{ selectedCity.lon }}</p>
+      <button @click="resetCity()" class="mt-2 p-2 bg-zinc-800 rounded-md text-white">
+        Reset
+      </button>
     </div>
   </div>
 </template>
@@ -70,6 +73,12 @@ const selectCity = (city: City) => {
   suggestions.value = []
   arrowCounter.value = -1
   emit('onCitySelected', city)
+}
+
+const resetCity = () => {
+  selectedCity.value = undefined
+  query.value = ''
+  emit('onCitySelected', null)
 }
 
 const onArrowDown = () => {

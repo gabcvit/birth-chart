@@ -16,9 +16,10 @@
       </div>
       <div class="mt-4 flex flex-col items-center">
         <label for="city">City:</label>
-        <CitySearchInput @onCitySelected="(val: City) => selectedCity = val" />
+        <CitySearchInput @onCitySelected="(val?: City) => selectedCity = val" />
       </div>
-      <button type="submit" :disabled="shouldDisableSubmitButton" class="disabled:opacity-50 mt-8 p-4 bg-zinc-800">
+      <button type="submit" :disabled="shouldDisableSubmitButton"
+        class="disabled:opacity-50 disabled:cursor-not-allowed mt-8 p-4 bg-zinc-800">
         Submit
       </button>
     </form>
@@ -35,12 +36,11 @@ const birthtime = ref('');
 const selectedCity = ref<City>();
 
 const shouldDisableSubmitButton = computed(() => {
-  console.log(birthdate.value, birthtime.value, selectedCity.value);
   return !birthdate.value || !birthtime.value || !selectedCity.value;
 });
 
 const onClickSummit = async () => {
-
+  console.log('Clicked!');
 }
 </script>
 
