@@ -30,17 +30,27 @@
 import { ref, computed } from 'vue';
 import CitySearchInput from '../components/CitySearchInput.vue';
 import type { City } from '../types/types.interfaces';
+import { useRouter } from 'vue-router';
 
 const birthdate = ref('');
 const birthtime = ref('');
 const selectedCity = ref<City>();
+const router = useRouter();
 
 const shouldDisableSubmitButton = computed(() => {
   return !birthdate.value || !birthtime.value || !selectedCity.value;
 });
 
 const onClickSummit = async () => {
-  console.log('Clicked!');
+  await router.push({
+    name: 'result',
+    query: {
+      birthdate: birthdate.value,
+      birthtime: birthtime.value,
+      lat: selectedCity.value?.lat,
+      lon: selectedCity.value?.lon,
+    }
+  });
 }
 </script>
 
