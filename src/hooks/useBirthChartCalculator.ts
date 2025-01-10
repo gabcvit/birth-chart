@@ -5,18 +5,20 @@ export default function useBirthChartCalculator(
 	time: string,
 	timeZone: string,
 ) {
-	console.log(date,
-		time,
-		timeZone)
-	const degToRad = (degrees: number): number => (degrees * Math.PI) / 180;
+	const simplifyAngle = (angle: number): number => {
+		const simplifiedAngle = angle % 360;
+		if (simplifiedAngle < 0) {
+			return 360 + simplifiedAngle;
+		}
+		return simplifiedAngle;
+	}
 
 	const calculateJulianDate = (): number => {
-		const dt = DateTime.fromISO(`${date}T${time}`, { zone: timeZone });
-		console.log(dt);
+		const dateTime = DateTime.fromISO(`${date}T${time}`, { zone: timeZone }).toUTC();
 
-		let year = dt.year;
-		let month = dt.month;
-		const day = dt.day + dt.hour / 24 + dt.minute / 1440; // Add fractional day
+		let year = dateTime.year;
+		let month = dateTime.month;
+		const day = dateTime.day + dateTime.hour / 24 + dateTime.minute / 1440;
 
 		if (month <= 2) {
 			year -= 1;
@@ -26,36 +28,47 @@ export default function useBirthChartCalculator(
 		const A = Math.floor(year / 100);
 		const B = 2 - A + Math.floor(A / 4);
 
-		const JD = Math.floor(365.25 * (year + 4716))
+		const julianDate = Math.floor(365.25 * (year + 4716))
 			+ Math.floor(30.6001 * (month + 1))
 			+ day + B - 1524.5;
 
-		console.log(JD);
-		return JD;
+		return julianDate;
 	};
 
-	const calculateSunLongitude = (jd: number): number => {
-		const T = (jd - 2451545.0) / 36525;
+	const calculateSunLongitude = (julianDate: number): number => {
+		// Number of days from epoch J2000.0
+		const daysFromEpoch = (julianDate - 2451545.0);
 
-		// Mean longitude of the Sun (L0)
-		const L0 = 280.46646 + 36000.76983 * T + 0.0003032 * T ** 2;
+		// Mean anomaly of the Sun
+		const meanAnomaly = 357.529 + 0.98560028 * daysFromEpoch;
 
-		// Mean anomaly of the Sun (M)
-		const M = 357.52911 + 35999.05029 * T - 0.0001537 * T ** 2;
+		// Mean longitude of the Sun
+		const meanLongitude = 280.459 + 0.98564736 * daysFromEpoch;
 
-		// Equation of center (C)
-		const C = (1.914602 - 0.004817 * T - 0.000014 * T ** 2) * Math.sin(degToRad(M))
-			+ (0.019993 - 0.000101 * T) * Math.sin(degToRad(2 * M))
-			+ 0.000289 * Math.sin(degToRad(3 * M));
+		// Geocentric apparent ecliptic longitude of the Sun
+		const apparentLongitude = meanLongitude + 1.915 * Math.sin(meanAnomaly)
+			+ 0.020 * Math.sin(2 * meanAnomaly);
 
-		// True longitude of the Sun
-		const trueLongitude = L0 + C;
+		return simplifyAngle(apparentLongitude);
+	};
 
-		// Correct for precession (apparent longitude)
-		const Omega = 125.04 - 1934.136 * T;
-		const apparentLongitude = trueLongitude - 0.00569 - 0.00478 * Math.sin(degToRad(Omega));
+	const calculateMoonLongitude = (julianDate: number): number => {
+		// Number of days from epoch J2000.0
+		const daysFromEpoch = (julianDate - 2451545.0);
 
-		return apparentLongitude % 360;
+		// Mean anomaly
+		const meanAnomaly = 134.963 + 13.064993 * daysFromEpoch;
+
+		// Mean longitude
+		const meanLongitude = 218.316 + 13.176396 * daysFromEpoch;
+
+		// Perturbations (corrections)
+		const correctedPerturbations = 6.289 * Math.sin(meanAnomaly)
+
+		// Apparent Longitude
+		const apparentLongitude = meanLongitude + correctedPerturbations;
+
+		return simplifyAngle(apparentLongitude);
 	};
 
 	const getZodiacSign = (longitude: number): string => {
@@ -69,23 +82,37 @@ export default function useBirthChartCalculator(
 	};
 
 	const calculateSunSign = () => {
-		const jd = calculateJulianDate();
-		const sunLongitude = calculateSunLongitude(jd);
-		const zodiacSign = getZodiacSign(sunLongitude);
+		const julianDate = calculateJulianDate();
+		const sunLongitude = calculateSunLongitude(julianDate);
+		const sign = getZodiacSign(sunLongitude);
 
 		return {
-			sunLongitude,
-			zodiacSign
+			sign,
+			longitude: Math.round(sunLongitude)
+		};
+	};
+
+	const calculateMoonSign = () => {
+		const julianDate = calculateJulianDate();
+		const moonLongitude = calculateMoonLongitude(julianDate);
+		const sign = getZodiacSign(moonLongitude);
+
+		return {
+			sign,
+			longitude: Math.round(moonLongitude)
 		};
 	};
 
 	const calculate = () => {
 		return {
 			sun: calculateSunSign(),
+			moon: calculateMoonSign(),
 		};
 	}
 
 	return {
+		calculateJulianDate,
+		calculateSunLongitude,
 		calculate,
 	};
 }
