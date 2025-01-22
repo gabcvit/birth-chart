@@ -22,6 +22,7 @@
       <p class="text-sm"><strong>City name:</strong> {{ selectedCity.display_name }}</p>
       <p class="text-sm"><strong>Latitude:</strong> {{ selectedCity.lat }}</p>
       <p class="text-sm"><strong>Longitude:</strong> {{ selectedCity.lon }}</p>
+      <p class="text-sm"><strong>Timezone:</strong> {{ selectedCity.timeZone }}</p>
       <button @click="resetCity()" class="mt-2 p-2 bg-zinc-800 rounded-md text-white">
         Reset
       </button>
@@ -32,6 +33,7 @@
 <script lang="ts" setup>
 import { ref, onMounted, onUnmounted, defineEmits } from 'vue'
 import type { City } from '../types/types.interfaces';
+import useTimeZoneFinder from '../hooks/useTimeZoneFinder';
 
 const API_URL = 'https://nominatim.openstreetmap.org/search'
 
@@ -41,6 +43,8 @@ const query = ref('')
 const suggestions = ref<City[]>([])
 const selectedCity = ref<City>()
 const arrowCounter = ref(-1)
+const timeZoneFinder = useTimeZoneFinder()
+const { timeZone } = timeZoneFinder;
 
 let debounceTimer: ReturnType<typeof setTimeout>
 
@@ -67,11 +71,13 @@ const fetchSuggestions = async () => {
   }
 }
 
-const selectCity = (city: City) => {
+const selectCity = async (city: City) => {
   selectedCity.value = city
   query.value = city.display_name
   suggestions.value = []
   arrowCounter.value = -1
+  await timeZoneFinder.findTimeZone(Number(city.lat), Number(city.lon))
+  city.timeZone = timeZone.value;
   emit('onCitySelected', city)
 }
 
