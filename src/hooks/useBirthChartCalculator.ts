@@ -13,6 +13,10 @@ export default function useBirthChartCalculator(
 		return simplifiedAngle;
 	}
 
+	const radToDeg = (rad: number): number => {
+		return rad * (180 / Math.PI);
+	}
+
 	const calculateJulianDate = (): number => {
 		const dateTime = DateTime.fromISO(`${date}T${time}`, { zone: timeZone }).toUTC();
 
@@ -36,8 +40,8 @@ export default function useBirthChartCalculator(
 	};
 
 	const calculateSunLongitude = (julianDate: number): number => {
-		// Number of days from epoch J2000.0
-		const daysFromEpoch = (julianDate - 2451545.0);
+		// Number of days from epoch (T)
+		const daysFromEpoch = julianDate - 2451545.0;
 
 		// Mean anomaly of the Sun
 		const meanAnomaly = 357.529 + 0.98560028 * daysFromEpoch;
@@ -54,7 +58,7 @@ export default function useBirthChartCalculator(
 
 	const calculateMoonLongitude = (julianDate: number): number => {
 		// Number of days from epoch J2000.0
-		const daysFromEpoch = (julianDate - 2451545.0);
+		const daysFromEpoch = julianDate - 2451545.0;
 
 		// Mean anomaly
 		const meanAnomaly = 134.963 + 13.064993 * daysFromEpoch;
@@ -69,6 +73,107 @@ export default function useBirthChartCalculator(
 		const apparentLongitude = meanLongitude + correctedPerturbations;
 
 		return simplifyAngle(apparentLongitude);
+	};
+
+	const calculateEarthLongitude = (julianDate: number) => {
+		const daysFromEpoch = julianDate - 2451545.0;
+
+		const meanAnomaly = 357.52911 + 35999.05029 * daysFromEpoch;
+
+		const eccentricity = 0.01671123;
+
+		const semiMajorAxis = 1.000000
+
+		// Mean longitude (L)
+		const a0 = 99.69668;
+		const a1 = 36000.76892;
+		const a2 = 0.0003025;
+		const meanLongitude = a0 + (a1 * daysFromEpoch) + (a2 * Math.pow(daysFromEpoch, 2));
+		
+		// Kepler's Equation for Eccentric Anomaly
+		let eccentricAnomaly = meanAnomaly; // Initial guess
+		for (let i = 0; i < 10; i++) {
+			eccentricAnomaly = meanAnomaly + eccentricity * Math.sin(eccentricAnomaly);
+		}
+
+		// True Anomaly
+		const trueAnomaly = 2 * Math.atan(Math.sqrt((1 + eccentricity) / (1 - eccentricity)) * Math.tan(eccentricAnomaly / 2));
+
+		// Heliocentric Longitude
+		const heliocentricLongitude = trueAnomaly + meanLongitude;
+
+		// Heliocentric Distance
+		const heliocentricDistance = semiMajorAxis * (1 - eccentricity * Math.cos(eccentricAnomaly));
+
+		return {
+			heliocentricLongitude,
+			heliocentricDistance,
+		}
+	}
+
+	const calculateMercuryLongitude = (julianDate: number): number => {
+		const daysFromEpoch = julianDate - 2451545.0;
+
+		// Eccentricity (e)
+		const eccentricity = 0.205630 + 0.00002 * daysFromEpoch;
+
+		// Semi-Major Axis (a)
+		const semiMajorAxis = 0.387098
+
+		// Argument of Perihelion (w)
+		const argumentOfPerihelion = 77.4577 + 0.1594 * daysFromEpoch;
+
+		// Longitude of Ascending Node (O)
+		const longitudeOfAscendingNode = 48.3308 + 0.1258 * daysFromEpoch;
+
+		// Perihelion (q)
+		const longitudeOfPerihelion = argumentOfPerihelion + longitudeOfAscendingNode;
+
+		// Mean longitude (L)
+		const a0 = 178.179078;
+		const a1 = 149474.07078;
+		const a2 = 0.0003011;
+		const meanLongitude = a0 + (a1 * daysFromEpoch) + (a2 * Math.pow(daysFromEpoch, 2));
+
+		// Mean anomaly (M)
+		const meanAnomaly = meanLongitude - longitudeOfPerihelion;
+
+		// Kepler's Equation for Eccentric Anomaly
+		let eccentricAnomaly = meanAnomaly; // Initial guess
+		for (let i = 0; i < 10; i++) {
+			eccentricAnomaly = meanAnomaly + eccentricity * Math.sin(eccentricAnomaly);
+		}
+
+		// True Anomaly
+		const trueAnomaly = 2 * Math.atan(Math.sqrt((1 + eccentricity) / (1 - eccentricity)) * Math.tan(eccentricAnomaly / 2));
+
+		// Heliocentric Distance
+		const heliocentricDistance = semiMajorAxis * (1 - eccentricity * Math.cos(eccentricAnomaly));
+
+		// Heliocentric Longitude
+		const heliocentricLongitude = trueAnomaly + longitudeOfPerihelion;
+
+		// Earth's position
+		const earth = calculateEarthLongitude(julianDate);
+		
+		// Calculate Geocentric Longitude
+		const earthCartesianAngles = {
+			x: earth.heliocentricDistance * Math.cos(earth.heliocentricLongitude),
+			y: earth.heliocentricDistance * Math.sin(earth.heliocentricLongitude),
+		}
+
+		const mercuryCartesianAngles = {
+			x: heliocentricDistance * Math.cos(heliocentricLongitude),
+			y: heliocentricDistance * Math.sin(heliocentricLongitude),
+		}
+
+		const relativeCartesianAngles = {
+			x: mercuryCartesianAngles.x - earthCartesianAngles.x,
+			y: mercuryCartesianAngles.y - earthCartesianAngles.y,
+		}
+		
+		const geocentricLongitude = radToDeg(Math.atan2(relativeCartesianAngles.y, relativeCartesianAngles.x));
+		return simplifyAngle(geocentricLongitude);
 	};
 
 	const getZodiacSign = (longitude: number): string => {
@@ -102,17 +207,30 @@ export default function useBirthChartCalculator(
 			longitude: Math.round(moonLongitude)
 		};
 	};
+	
+	const calculateMercurySign = () => {
+		const julianDate = calculateJulianDate();
+		const moonLongitude = calculateMercuryLongitude(julianDate);
+		const sign = getZodiacSign(moonLongitude);
+
+		return {
+			sign,
+			longitude: Math.round(moonLongitude)
+		};
+	};
 
 	const calculate = () => {
 		return {
 			sun: calculateSunSign(),
 			moon: calculateMoonSign(),
+			mercury: calculateMercurySign(),
 		};
 	}
 
 	return {
 		calculateJulianDate,
 		calculateSunLongitude,
+		calculateMercuryLongitude,
 		calculate,
 	};
 }

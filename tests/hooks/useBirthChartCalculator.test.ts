@@ -29,6 +29,10 @@ describe('useBirthChartCalculator', () => {
 			moon: {
 				sign: 'Pisces',
 				longitude: 339
+			},
+			mercury: {
+				sign: 'Scorpio',
+				longitude: 236,
 			}
 		})
 	});
