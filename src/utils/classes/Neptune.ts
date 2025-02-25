@@ -1,15 +1,15 @@
-import { simplifyAngle, radToDeg } from '../helpers';
 import { CelestialBody } from './CelestialBody';
-import { Earth } from './Earth';
+import * as Astronomy from "astronomy-engine"
+import {Body} from 'astronomy-engine'
+import { DateTime } from 'luxon';
 
 export class Neptune extends CelestialBody {
 	private heliocentricDistance: number = 0;
 	private heliocentricLongitude: number = 0;
 
-	constructor(date: string, time: string, timeZone: string) {
+	constructor(date: string, time: string, timeZone: string, observer: Astronomy.Observer) {
 		super(date, time, timeZone);
-		this.calculateHeliocentricLongitude();
-		this.calculateGeocentricLongitude();
+		this.calculateGeocentricLongitude(observer);
 	}
 
 	getHeliocentricDistance() {
@@ -24,66 +24,10 @@ export class Neptune extends CelestialBody {
 		return this.geocentricLongitude;
 	}
 
-	calculateHeliocentricLongitude() {
-		const daysFromEpoch = this.julianDate - 2451545.0;
-	
-		// Eccentricity (e)
-		const eccentricity = 0.008606 - 2.15E-9 * daysFromEpoch;
-
-		// Semi-Major Axis (a)
-		const semiMajorAxis = 30.05826 + 3.313E-8 * daysFromEpoch;
-
-		// Argument of Perihelion (w)
-		const argumentOfPerihelion = 272.8461 - 6.027E-6 * daysFromEpoch;
-
-		// Longitude of Ascending Node (O)
-		const longitudeOfAscendingNode = 131.784057 - 0.00616559 * daysFromEpoch;
-
-		// Perihelion (q)
-		const longitudeOfPerihelion = argumentOfPerihelion + longitudeOfAscendingNode;
-
-		// Mean longitude (L)
-		const a0 = 84.457994;
-		const a1 = 219.885914;
-		const a2 = 0.0003205;
-		const a3 = -0.00000060;
-		const meanLongitude = a0 + (a1 * daysFromEpoch) + (a2 * Math.pow(daysFromEpoch, 2)) + (a3 * Math.pow(daysFromEpoch, 3));
-
-		// Mean anomaly (M)
-		const meanAnomaly = meanLongitude - longitudeOfPerihelion;
-
-		// Kepler's Equation for Eccentric Anomaly
-		let eccentricAnomaly = meanAnomaly; // Initial guess
-		for (let i = 0; i < 10; i++) {
-			eccentricAnomaly = meanAnomaly + eccentricity * Math.sin(eccentricAnomaly);
-		}
-
-		// True Anomaly
-		const trueAnomaly = 2 * Math.atan(Math.sqrt((1 + eccentricity) / (1 - eccentricity)) * Math.tan(eccentricAnomaly / 2));
-
-		this.heliocentricDistance = semiMajorAxis * (1 - eccentricity * Math.cos(eccentricAnomaly));
-		this.heliocentricLongitude = trueAnomaly + longitudeOfPerihelion;
-	}
-
-	calculateGeocentricLongitude() {
-		const earth = new Earth(this.date, this.time, this.timeZone)
-		
-		const earthCartesianAngles = {
-			x: earth.getHeliocentricDistance() * Math.cos(earth.getHeliocentricLongitude()),
-			y: earth.getHeliocentricDistance() * Math.sin(earth.getHeliocentricLongitude()),
-		}
-
-		const selfCartesianAngles = {
-			x: this.heliocentricDistance * Math.cos(this.heliocentricLongitude),
-			y: this.heliocentricDistance * Math.sin(this.heliocentricLongitude),
-		}
-
-		const relativeCartesianAngles = {
-			x: selfCartesianAngles.x - earthCartesianAngles.x,
-			y: selfCartesianAngles.y - earthCartesianAngles.y,
-		}
-
-		const convertedToDegree = radToDeg(Math.atan2(relativeCartesianAngles.y, relativeCartesianAngles.x))
-		this.geocentricLongitude = simplifyAngle(convertedToDegree);
+	calculateGeocentricLongitude(observer: Astronomy.Observer) {
+		const dateTime = DateTime.fromISO(`${this.date}T${this.time}`, { zone: this.timeZone });
+		const equatorialCoordinates = Astronomy.Equator(Body.Neptune, dateTime.toUTC().toJSDate(), observer, true, true);
+		const ecliptic = Astronomy.Ecliptic(equatorialCoordinates.vec);
+		this.geocentricLongitude = ecliptic.elon;
 	}
 }

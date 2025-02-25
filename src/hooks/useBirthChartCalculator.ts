@@ -8,14 +8,16 @@ import { Saturn } from '../utils/classes/Saturn';
 import { Uranus } from '../utils/classes/Uranus';
 import { Neptune } from '../utils/classes/Neptune';
 import { Pluto } from '../utils/classes/Pluto';
+import * as Astronomy from "astronomy-engine"
 
 export default function useBirthChartCalculator(
 	date: string,
 	time: string,
 	timeZone: string,
+	observer: Astronomy.Observer,
 ) {
 	const calculateSunSign = () => {
-		const sun = new Sun(date, time, timeZone);
+		const sun = new Sun(date, time, timeZone, observer);
 
 		return {
 			sign: sun.getZodiacSign(),
@@ -24,7 +26,7 @@ export default function useBirthChartCalculator(
 	};
 
 	const calculateMoonSign = () => {
-		const moon = new Moon(date, time, timeZone);
+		const moon = new Moon(date, time, timeZone, observer);
 
 		return {
 			sign: moon.getZodiacSign(),
@@ -33,7 +35,8 @@ export default function useBirthChartCalculator(
 	};
 	
 	const calculateMercurySign = () => {
-		const mercury = new Mercury(date, time, timeZone);
+
+		const mercury = new Mercury(date, time, timeZone, observer);
 
 		return {
 			sign: mercury.getZodiacSign(),
@@ -42,7 +45,7 @@ export default function useBirthChartCalculator(
 	};
 
 	const calculateVenusSign = () => {
-		const venus = new Venus(date, time, timeZone);
+		const venus = new Venus(date, time, timeZone, observer);
 
 		return {
 			sign: venus.getZodiacSign(),
@@ -51,7 +54,7 @@ export default function useBirthChartCalculator(
 	};
 
 	const calculateMarsSign = () => {
-		const mars = new Mars(date, time, timeZone);
+		const mars = new Mars(date, time, timeZone, observer);
 
 		return {
 			sign: mars.getZodiacSign(),
@@ -60,7 +63,7 @@ export default function useBirthChartCalculator(
 	};
 
 	const calculateJupiterSign = () => {
-		const jupiter = new Jupiter(date, time, timeZone);
+		const jupiter = new Jupiter(date, time, timeZone, observer);
 
 		return {
 			sign: jupiter.getZodiacSign(),
@@ -69,7 +72,7 @@ export default function useBirthChartCalculator(
 	};
 
 	const calculateSaturnSign = () => {
-		const saturn = new Saturn(date, time, timeZone);
+		const saturn = new Saturn(date, time, timeZone, observer);
 
 		return {
 			sign: saturn.getZodiacSign(),
@@ -78,7 +81,7 @@ export default function useBirthChartCalculator(
 	};
 
 	const calculateUranusSign = () => {
-		const uranus = new Uranus(date, time, timeZone);
+		const uranus = new Uranus(date, time, timeZone, observer);
 
 		return {
 			sign: uranus.getZodiacSign(),
@@ -87,7 +90,7 @@ export default function useBirthChartCalculator(
 	};
 
 	const calculateNeptuneSign = () => {
-		const neptune = new Neptune(date, time, timeZone);
+		const neptune = new Neptune(date, time, timeZone, observer);
 
 		return {
 			sign: neptune.getZodiacSign(),
@@ -96,7 +99,7 @@ export default function useBirthChartCalculator(
 	};
 
 	const calculatePlutoSign = () => {
-		const pluto = new Pluto(date, time, timeZone);
+		const pluto = new Pluto(date, time, timeZone, observer);
 
 		return {
 			sign: pluto.getZodiacSign(),

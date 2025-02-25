@@ -1,31 +1,23 @@
-import { simplifyAngle } from '../helpers';
 import { CelestialBody } from './CelestialBody';
+import * as Astronomy from "astronomy-engine"
+import {Body} from 'astronomy-engine'
+import { DateTime } from 'luxon';
 
 export class Sun extends CelestialBody {
 
-	constructor(date: string, time: string, timeZone: string) {
+	constructor(date: string, time: string, timeZone: string, observer: Astronomy.Observer) {
 		super(date, time, timeZone);
-		this.calculateGeocentricLongitude();
+		this.calculateGeocentricLongitude(observer);
 	}
 
 	getGeocentricLongitude() {
 		return this.geocentricLongitude;
 	}
 
-	calculateGeocentricLongitude() {
-		// Number of days from epoch (T)
-		const daysFromEpoch = this.julianDate - 2451545.0;
-
-		// Mean anomaly of the Sun
-		const meanAnomaly = 357.529 + 0.98560028 * daysFromEpoch;
-
-		// Mean longitude of the Sun
-		const meanLongitude = 280.459 + 0.98564736 * daysFromEpoch;
-
-		// Geocentric apparent ecliptic longitude of the Sun
-		const apparentLongitude = meanLongitude + 1.915 * Math.sin(meanAnomaly)
-			+ 0.020 * Math.sin(2 * meanAnomaly);
-
-		this.geocentricLongitude = simplifyAngle(apparentLongitude);
-	};
+	calculateGeocentricLongitude(observer: Astronomy.Observer) {
+		const dateTime = DateTime.fromISO(`${this.date}T${this.time}`, { zone: this.timeZone });
+		const equatorialCoordinates = Astronomy.Equator(Body.Sun, dateTime.toUTC().toJSDate(), observer, true, true);
+		const ecliptic = Astronomy.Ecliptic(equatorialCoordinates.vec);
+		this.geocentricLongitude = ecliptic.elon;
+	}
 }
