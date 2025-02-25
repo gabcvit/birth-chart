@@ -8,8 +8,4 @@ export class Sun extends CelestialBody {
 		super(date, time, timeZone, Body.Sun);
 		this.calculateGeocentricLongitude(observer);
 	}
-
-	getGeocentricLongitude() {
-		return this.geocentricLongitude;
-	}
 }

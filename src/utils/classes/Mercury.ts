@@ -7,8 +7,4 @@ export class Mercury extends CelestialBody {
 		super(date, time, timeZone, Body.Mercury);
 		this.calculateGeocentricLongitude(observer);
 	}
-
-	getGeocentricLongitude() {
-		return this.geocentricLongitude;
-	}
 }

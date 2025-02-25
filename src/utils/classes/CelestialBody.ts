@@ -27,6 +27,10 @@ export class CelestialBody {
 		return zodiacSigns[index];
 	};
 
+	getGeocentricLongitude() {
+		return this.geocentricLongitude;
+	}
+
 	calculateGeocentricLongitude(observer: Astronomy.Observer) {
 		const equatorialCoordinates = Astronomy.Equator(this.body, this.dateTime, observer, true, true);
 		const ecliptic = Astronomy.Ecliptic(equatorialCoordinates.vec);

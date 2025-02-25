@@ -7,8 +7,4 @@ export class Neptune extends CelestialBody {
 		super(date, time, timeZone, Body.Neptune);
 		this.calculateGeocentricLongitude(observer);
 	}
-
-	getGeocentricLongitude() {
-		return this.geocentricLongitude;
-	}
 }

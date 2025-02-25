@@ -7,8 +7,4 @@ export class Saturn extends CelestialBody {
 		super(date, time, timeZone, Body.Saturn);
 		this.calculateGeocentricLongitude(observer);
 	}
-
-	getGeocentricLongitude() {
-		return this.geocentricLongitude;
-	}
 }

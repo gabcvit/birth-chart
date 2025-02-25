@@ -7,8 +7,4 @@ export class Uranus extends CelestialBody {
 		super(date, time, timeZone, Body.Uranus);
 		this.calculateGeocentricLongitude(observer);
 	}
-
-	getGeocentricLongitude() {
-		return this.geocentricLongitude;
-	}
 }

@@ -7,8 +7,4 @@ export class Venus extends CelestialBody {
 		super(date, time, timeZone, Body.Venus);
 		this.calculateGeocentricLongitude(observer);
 	}
-
-	getGeocentricLongitude() {
-		return this.geocentricLongitude;
-	}
 }

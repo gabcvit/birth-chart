@@ -7,8 +7,4 @@ export class Pluto extends CelestialBody {
 		super(date, time, timeZone, Body.Pluto);
 		this.calculateGeocentricLongitude(observer);
 	}
-
-	getGeocentricLongitude() {
-		return this.geocentricLongitude;
-	}
 }

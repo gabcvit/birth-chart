@@ -8,8 +8,4 @@ export class Jupiter extends CelestialBody {
 		super(date, time, timeZone, Body.Jupiter);
 		this.calculateGeocentricLongitude(observer);
 	}
-
-	getGeocentricLongitude() {
-		return this.geocentricLongitude;
-	}
 }
