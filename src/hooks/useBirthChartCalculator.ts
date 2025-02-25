@@ -21,7 +21,7 @@ export default function useBirthChartCalculator(
 
 		return {
 			sign: sun.getZodiacSign(),
-			longitude: Math.round(sun.getGeocentricLongitude())
+			longitude: sun.getGeocentricLongitude(),
 		};
 	};
 
@@ -30,7 +30,7 @@ export default function useBirthChartCalculator(
 
 		return {
 			sign: moon.getZodiacSign(),
-			longitude: Math.round(moon.getGeocentricLongitude())
+			longitude: moon.getGeocentricLongitude()
 		};
 	};
 	
@@ -40,7 +40,7 @@ export default function useBirthChartCalculator(
 
 		return {
 			sign: mercury.getZodiacSign(),
-			longitude: Math.round(mercury.getGeocentricLongitude())
+			longitude: mercury.getGeocentricLongitude()
 		};
 	};
 
@@ -49,7 +49,7 @@ export default function useBirthChartCalculator(
 
 		return {
 			sign: venus.getZodiacSign(),
-			longitude: Math.round(venus.getGeocentricLongitude())
+			longitude: venus.getGeocentricLongitude()
 		};
 	};
 
@@ -58,7 +58,7 @@ export default function useBirthChartCalculator(
 
 		return {
 			sign: mars.getZodiacSign(),
-			longitude: Math.round(mars.getGeocentricLongitude())
+			longitude: mars.getGeocentricLongitude()
 		};
 	};
 
@@ -67,7 +67,7 @@ export default function useBirthChartCalculator(
 
 		return {
 			sign: jupiter.getZodiacSign(),
-			longitude: Math.round(jupiter.getGeocentricLongitude())
+			longitude: jupiter.getGeocentricLongitude()
 		};
 	};
 
@@ -76,7 +76,7 @@ export default function useBirthChartCalculator(
 
 		return {
 			sign: saturn.getZodiacSign(),
-			longitude: Math.round(saturn.getGeocentricLongitude())
+			longitude: saturn.getGeocentricLongitude()
 		};
 	};
 
@@ -85,7 +85,7 @@ export default function useBirthChartCalculator(
 
 		return {
 			sign: uranus.getZodiacSign(),
-			longitude: Math.round(uranus.getGeocentricLongitude())
+			longitude: uranus.getGeocentricLongitude()
 		};
 	};
 
@@ -94,7 +94,7 @@ export default function useBirthChartCalculator(
 
 		return {
 			sign: neptune.getZodiacSign(),
-			longitude: Math.round(neptune.getGeocentricLongitude())
+			longitude: neptune.getGeocentricLongitude(),
 		};
 	};
 
@@ -103,7 +103,7 @@ export default function useBirthChartCalculator(
 
 		return {
 			sign: pluto.getZodiacSign(),
-			longitude: Math.round(pluto.getGeocentricLongitude())
+			longitude: pluto.getGeocentricLongitude()
 		};
 	};
 
