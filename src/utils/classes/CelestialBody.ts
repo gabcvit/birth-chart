@@ -1,21 +1,20 @@
-import { calculateJulianDate } from '../helpers';
+import * as Astronomy from "astronomy-engine"
+import {Body} from 'astronomy-engine'
+import { DateTime } from 'luxon';
 
 export class CelestialBody {
-	protected julianDate: number;
-	protected date: string;
-	protected time: string;
-	protected timeZone: string;
+	protected dateTime: Date;
+	protected body: Astronomy.Body = Body.Star1;
 	protected geocentricLongitude: number = 0;
 	
 	constructor(
 		date: string,
 		time: string,
-		timeZone: string
+		timeZone: string,
+		body: Astronomy.Body,
 	) {
-		this.date = date;
-		this.time = time;
-		this.timeZone = timeZone;
-		this.julianDate = calculateJulianDate(date, time, timeZone);
+		this.dateTime = DateTime.fromISO(`${date}T${time}`, { zone: timeZone }).toUTC().toJSDate();
+		this.body = body;
 	}
 
 	getZodiacSign(): string {
@@ -27,4 +26,10 @@ export class CelestialBody {
 		const index = Math.floor(this.geocentricLongitude / 30);
 		return zodiacSigns[index];
 	};
+
+	calculateGeocentricLongitude(observer: Astronomy.Observer) {
+		const equatorialCoordinates = Astronomy.Equator(this.body, this.dateTime, observer, true, true);
+		const ecliptic = Astronomy.Ecliptic(equatorialCoordinates.vec);
+		this.geocentricLongitude = ecliptic.elon;
+	}
 }

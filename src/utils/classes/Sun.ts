@@ -1,23 +1,15 @@
 import { CelestialBody } from './CelestialBody';
 import * as Astronomy from "astronomy-engine"
 import {Body} from 'astronomy-engine'
-import { DateTime } from 'luxon';
 
 export class Sun extends CelestialBody {
 
 	constructor(date: string, time: string, timeZone: string, observer: Astronomy.Observer) {
-		super(date, time, timeZone);
+		super(date, time, timeZone, Body.Sun);
 		this.calculateGeocentricLongitude(observer);
 	}
 
 	getGeocentricLongitude() {
 		return this.geocentricLongitude;
-	}
-
-	calculateGeocentricLongitude(observer: Astronomy.Observer) {
-		const dateTime = DateTime.fromISO(`${this.date}T${this.time}`, { zone: this.timeZone });
-		const equatorialCoordinates = Astronomy.Equator(Body.Sun, dateTime.toUTC().toJSDate(), observer, true, true);
-		const ecliptic = Astronomy.Ecliptic(equatorialCoordinates.vec);
-		this.geocentricLongitude = ecliptic.elon;
 	}
 }
