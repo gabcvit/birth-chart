@@ -30,6 +30,9 @@ export class Venus extends CelestialBody {
 		// Eccentricity (e)
 		const eccentricity = 0.00682069 - 0.00004774 * daysFromEpoch;
 
+		// inclination (i)
+		const inclination = 3.39471 + 2.75E-8 * daysFromEpoch;
+
 		// Semi-Major Axis (a)
 		const semiMajorAxis = 0.7233316
 
@@ -37,7 +40,7 @@ export class Venus extends CelestialBody {
 		const argumentOfPerihelion = 54.384186 + 0.5081861 * daysFromEpoch;
 
 		// Longitude of Ascending Node (O)
-		const longitudeOfAscendingNode = 75.779647 + 0.8998500 * daysFromEpoch;
+		const longitudeOfAscendingNode = 76.6799 + 2.46590E-5 * daysFromEpoch;
 
 		// Perihelion (q)
 		const longitudeOfPerihelion = argumentOfPerihelion + longitudeOfAscendingNode;
@@ -57,11 +60,21 @@ export class Venus extends CelestialBody {
 			eccentricAnomaly = meanAnomaly + eccentricity * Math.sin(eccentricAnomaly);
 		}
 
-		// True Anomaly
-		const trueAnomaly = 2 * Math.atan(Math.sqrt((1 + eccentricity) / (1 - eccentricity)) * Math.tan(eccentricAnomaly / 2));
+		const x = semiMajorAxis * (Math.cos(eccentricAnomaly) - eccentricity);
+		const y = semiMajorAxis * Math.sqrt(1 - Math.pow(eccentricity, 2)) * Math.sin(eccentricAnomaly);
 
-		this.heliocentricDistance = semiMajorAxis * (1 - eccentricity * Math.cos(eccentricAnomaly));
-		this.heliocentricLongitude = trueAnomaly + longitudeOfPerihelion;
+		const r = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+		const v = Math.atan2(y, x);
+
+		const xeclip = r * (Math.cos(longitudeOfAscendingNode) * Math.cos(v + argumentOfPerihelion) - Math.sin(longitudeOfAscendingNode) * Math.sin(v + argumentOfPerihelion) * Math.cos(inclination));
+		const yeclip = r * (Math.sin(longitudeOfAscendingNode) * Math.cos(v + argumentOfPerihelion) + Math.cos(longitudeOfAscendingNode) * Math.sin(v + argumentOfPerihelion) * Math.cos(inclination));
+		const zeclip = r * (Math.sin(v + argumentOfPerihelion) * Math.sin(inclination));
+
+		const longitude = Math.atan2(yeclip, xeclip);
+		const elipticRadius = Math.sqrt(Math.pow(xeclip, 2) + Math.pow(yeclip, 2) + Math.pow(zeclip, 2));
+
+		this.heliocentricDistance = elipticRadius;
+		this.heliocentricLongitude = longitude;
 	}
 
 	calculateGeocentricLongitude() {
