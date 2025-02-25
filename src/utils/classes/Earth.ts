@@ -1,4 +1,3 @@
-import { simplifyAngle } from '../helpers';
 import { CelestialBody } from './CelestialBody';
 
 export class Earth extends CelestialBody {
@@ -7,7 +6,7 @@ export class Earth extends CelestialBody {
 
 	constructor(date: string, time: string, timeZone: string) {
 		super(date, time, timeZone);
-		this.calculateHeliocentricPosition();
+		this.calculateHeliocentricLongitude();
 	}
 
 	getHeliocentricDistance() {
@@ -18,7 +17,7 @@ export class Earth extends CelestialBody {
 		return this.heliocentricLongitude;
 	}
 
-	calculateHeliocentricPosition() {
+	calculateHeliocentricLongitude() {
 		const daysFromEpoch = this.julianDate - 2451545.0;
 
 		const meanAnomaly = 357.52911 + 35999.05029 * daysFromEpoch;

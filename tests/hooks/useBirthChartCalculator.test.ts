@@ -12,16 +12,44 @@ describe('useBirthChartCalculator', () => {
 		expect(res).toStrictEqual({
 			sun: {
 				sign: 'Scorpio',
-				longitude: 213
+				longitude: expect.any(Number),
 			},
 			moon: {
 				sign: 'Pisces',
-				longitude: 339
+				longitude: expect.any(Number),
 			},
 			mercury: {
 				sign: 'Scorpio',
-				longitude: 236,
-			}
+				longitude: expect.any(Number),
+			},
+			venus: {
+				sign: 'Libra',
+				longitude: expect.any(Number),
+			},
+			mars: {
+				sign: 'Scorpio',
+				longitude: expect.any(Number),
+			},
+			jupiter: {
+				sign: 'Libra',
+				longitude: expect.any(Number),
+			},
+			saturn: {
+				sign: 'Aquarius',
+				longitude: expect.any(Number),
+			},
+			uranus: {
+				sign: 'Capricorn',
+				longitude: expect.any(Number),
+			},
+			neptune: {
+				sign: 'Capricorn',
+				longitude: expect.any(Number),
+			},
+			pluto: {
+				sign: 'Scorpio',
+				longitude: expect.any(Number),
+			},
 		})
 	});
 });

@@ -2,7 +2,7 @@ import { simplifyAngle, radToDeg } from '../helpers';
 import { CelestialBody } from './CelestialBody';
 import { Earth } from './Earth';
 
-export class Mercury extends CelestialBody {
+export class Saturn extends CelestialBody {
 	private heliocentricDistance: number = 0;
 	private heliocentricLongitude: number = 0;
 
@@ -28,25 +28,26 @@ export class Mercury extends CelestialBody {
 		const daysFromEpoch = this.julianDate - 2451545.0;
 	
 		// Eccentricity (e)
-		const eccentricity = 0.205630 + 5.59E-10 * daysFromEpoch;
+		const eccentricity = 0.047318 + 7.45E-9 * daysFromEpoch;
 
 		// Semi-Major Axis (a)
-		const semiMajorAxis = 0.387098
+		const semiMajorAxis = 19.18171 - 1.55E-8 * daysFromEpoch;
 
 		// Argument of Perihelion (w)
-		const argumentOfPerihelion = 29.1241 + 1.01444E-5 * daysFromEpoch;
+		const argumentOfPerihelion = 339.3939 + 2.97661E-5 * daysFromEpoch;
 
 		// Longitude of Ascending Node (O)
-		const longitudeOfAscendingNode = 48.33167 - 0.1253408 * daysFromEpoch;
+		const longitudeOfAscendingNode = 113.665524 - 0.256897 * daysFromEpoch;
 
 		// Perihelion (q)
 		const longitudeOfPerihelion = argumentOfPerihelion + longitudeOfAscendingNode;
 
 		// Mean longitude (L)
-		const a0 = 178.179078;
-		const a1 = 149474.07078;
-		const a2 = 0.0003011;
-		const meanLongitude = a0 + (a1 * daysFromEpoch) + (a2 * Math.pow(daysFromEpoch, 2));
+		const a0 = 244.197470;
+		const a1 = 429.863546;
+		const a2 = 0.0003160;
+		const a3 = -0.00000060;
+		const meanLongitude = a0 + (a1 * daysFromEpoch) + (a2 * Math.pow(daysFromEpoch, 2)) + (a3 * Math.pow(daysFromEpoch, 3));
 
 		// Mean anomaly (M)
 		const meanAnomaly = meanLongitude - longitudeOfPerihelion;

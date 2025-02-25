@@ -1,6 +1,13 @@
 import { Sun } from '../utils/classes/Sun';
+import { Mars } from '../utils/classes/Mars';
 import { Mercury } from '../utils/classes/Mercury';
 import { Moon } from '../utils/classes/Moon';
+import { Venus } from '../utils/classes/Venus';
+import { Jupiter } from '../utils/classes/Jupiter';
+import { Saturn } from '../utils/classes/Saturn';
+import { Uranus } from '../utils/classes/Uranus';
+import { Neptune } from '../utils/classes/Neptune';
+import { Pluto } from '../utils/classes/Pluto';
 
 export default function useBirthChartCalculator(
 	date: string,
@@ -34,11 +41,81 @@ export default function useBirthChartCalculator(
 		};
 	};
 
+	const calculateVenusSign = () => {
+		const venus = new Venus(date, time, timeZone);
+
+		return {
+			sign: venus.getZodiacSign(),
+			longitude: Math.round(venus.getGeocentricLongitude())
+		};
+	};
+
+	const calculateMarsSign = () => {
+		const mars = new Mars(date, time, timeZone);
+
+		return {
+			sign: mars.getZodiacSign(),
+			longitude: Math.round(mars.getGeocentricLongitude())
+		};
+	};
+
+	const calculateJupiterSign = () => {
+		const jupiter = new Jupiter(date, time, timeZone);
+
+		return {
+			sign: jupiter.getZodiacSign(),
+			longitude: Math.round(jupiter.getGeocentricLongitude())
+		};
+	};
+
+	const calculateSaturnSign = () => {
+		const saturn = new Saturn(date, time, timeZone);
+
+		return {
+			sign: saturn.getZodiacSign(),
+			longitude: Math.round(saturn.getGeocentricLongitude())
+		};
+	};
+
+	const calculateUranusSign = () => {
+		const uranus = new Uranus(date, time, timeZone);
+
+		return {
+			sign: uranus.getZodiacSign(),
+			longitude: Math.round(uranus.getGeocentricLongitude())
+		};
+	};
+
+	const calculateNeptuneSign = () => {
+		const neptune = new Neptune(date, time, timeZone);
+
+		return {
+			sign: neptune.getZodiacSign(),
+			longitude: Math.round(neptune.getGeocentricLongitude())
+		};
+	};
+
+	const calculatePlutoSign = () => {
+		const pluto = new Pluto(date, time, timeZone);
+
+		return {
+			sign: pluto.getZodiacSign(),
+			longitude: Math.round(pluto.getGeocentricLongitude())
+		};
+	};
+
 	const calculate = () => {
 		return {
 			sun: calculateSunSign(),
 			moon: calculateMoonSign(),
 			mercury: calculateMercurySign(),
+			venus: calculateVenusSign(),
+			mars: calculateMarsSign(),
+			jupiter: calculateJupiterSign(),
+			saturn: calculateSaturnSign(),
+			uranus: calculateUranusSign(),
+			neptune: calculateNeptuneSign(),
+			pluto: calculatePlutoSign(),
 		};
 	}
 

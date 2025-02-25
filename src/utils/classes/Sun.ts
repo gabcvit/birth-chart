@@ -5,14 +5,14 @@ export class Sun extends CelestialBody {
 
 	constructor(date: string, time: string, timeZone: string) {
 		super(date, time, timeZone);
-		this.calculateLongitude();
+		this.calculateGeocentricLongitude();
 	}
 
 	getGeocentricLongitude() {
 		return this.geocentricLongitude;
 	}
 
-	calculateLongitude() {
+	calculateGeocentricLongitude() {
 		// Number of days from epoch (T)
 		const daysFromEpoch = this.julianDate - 2451545.0;
 
