@@ -1,29 +1,58 @@
 <template>
   <div class="w-full max-w-md mx-auto">
     <div class="relative">
-      <input v-model="query" @input="debouncedSearch" @keydown.down="onArrowDown" @keydown.up="onArrowUp"
-        @keydown.enter="onEnter" type="text" placeholder="Enter a city name"
-        class="mt-2 p-4 bg-zinc-800 w-full text-white bg-white border rounded-md shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
-      <ul v-if="suggestions.length > 0"
-        class="absolute z-10 w-full mt-1 bg-zinc-950 rounded-md shadow-lg max-h-60 overflow-auto">
-        <li v-for="(suggestion, index) in suggestions" :key="suggestion.place_id" @click="selectCity(suggestion)"
+      <input
+        v-model="query"
+        @input="debouncedSearch"
+        @keydown.down="onArrowDown"
+        @keydown.up="onArrowUp"
+        @keydown.enter="onEnter"
+        type="text"
+        placeholder="Enter a city name"
+        class="mt-2 p-4 bg-zinc-800 w-full text-white bg-white border 
+        rounded-md shadow-sm focus:border-blue-500 focus:outline-none 
+        focus:ring-2 focus:ring-blue-500"
+      >
+      <ul
+        v-if="suggestions.length > 0"
+        class="absolute z-10 w-full mt-1 bg-zinc-950 rounded-md shadow-lg max-h-60 overflow-auto"
+      >
+        <li
+          v-for="(suggestion, index) in suggestions"
+          :key="suggestion.place_id"
+          @click="selectCity(suggestion)"
           :class="[
             'px-4 py-2 cursor-pointer hover:bg-zinc-900',
             { 'bg-zinc-900': index === arrowCounter }
-          ]">
+          ]"
+        >
           {{ suggestion.display_name }}
         </li>
       </ul>
     </div>
-    <div v-if="selectedCity" class="mt-4 p-4 bg-zinc-900 rounded-md">
+    <div
+      v-if="selectedCity"
+      class="mt-4 p-4 bg-zinc-900 rounded-md"
+    >
       <h3 class="text-md font-semibold mb-2">
         Selected birth location
       </h3>
-      <p class="text-sm"><strong>City name:</strong> {{ selectedCity.display_name }}</p>
-      <p class="text-sm"><strong>Latitude:</strong> {{ selectedCity.lat }}</p>
-      <p class="text-sm"><strong>Longitude:</strong> {{ selectedCity.lon }}</p>
-      <p class="text-sm"><strong>Timezone:</strong> {{ selectedCity.timeZone }}</p>
-      <button @click="resetCity()" class="mt-2 p-2 bg-zinc-800 rounded-md text-white">
+      <p class="text-sm">
+        <strong>City name:</strong> {{ selectedCity.display_name }}
+      </p>
+      <p class="text-sm">
+        <strong>Latitude:</strong> {{ selectedCity.lat }}
+      </p>
+      <p class="text-sm">
+        <strong>Longitude:</strong> {{ selectedCity.lon }}
+      </p>
+      <p class="text-sm">
+        <strong>Timezone:</strong> {{ selectedCity.timeZone }}
+      </p>
+      <button
+        @click="resetCity()"
+        class="mt-2 p-2 bg-zinc-800 rounded-md text-white"
+      >
         Reset
       </button>
     </div>

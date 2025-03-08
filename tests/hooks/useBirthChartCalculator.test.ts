@@ -11,7 +11,7 @@ describe('useBirthChartCalculator', () => {
 		const birthChartCalculator = useBirthChartCalculator(mockedDate, mockedTime, mockedTimeZone, observer);
 	
 		it('should calculate correctly the angles given', () => {
-			const res = birthChartCalculator.calculate()
+			const res = birthChartCalculator
 			expect(res).toStrictEqual({
 				sun: {
 					sign: 'Scorpio',
@@ -65,7 +65,7 @@ describe('useBirthChartCalculator', () => {
 		const birthChartCalculator = useBirthChartCalculator(mockedDate, mockedTime, mockedTimeZone, observer);
 	
 		it('should calculate correctly the angles given', () => {
-			const res = birthChartCalculator.calculate()
+			const res = birthChartCalculator;
 			expect(res).toStrictEqual({
 				sun: {
 					sign: 'Pisces',
@@ -119,7 +119,7 @@ describe('useBirthChartCalculator', () => {
 		const birthChartCalculator = useBirthChartCalculator(mockedDate, mockedTime, mockedTimeZone, observer);
 	
 		it('should calculate correctly the angles given', () => {
-			const res = birthChartCalculator.calculate()
+			const res = birthChartCalculator;
 			expect(res).toStrictEqual({
 				sun: {
 					sign: 'Aquarius',

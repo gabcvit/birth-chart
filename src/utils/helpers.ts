@@ -1,4 +1,5 @@
 import { DateTime } from 'luxon';
+import { LocationQueryValue } from 'vue-router';
 
 export const simplifyAngle = (angle: number): number => {
 	const simplifiedAngle = angle % 360;
@@ -36,3 +37,29 @@ export const calculateJulianDate = (
 
 	return julianDate;
 };
+
+export const capitalize = (s: string) => {
+	if (typeof s !== 'string') return '';
+	return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+export const formatAngle = (angle: number) => {
+	const degrees = Math.floor(angle);
+	const minutes = Math.round((angle - degrees) * 60);
+	return `${degrees}° ${minutes}'`;
+}
+
+export const extractStringFromLocationQueryValue = (query: LocationQueryValue | LocationQueryValue[] | undefined) => {
+	if (Array.isArray(query)) {
+		return query[0];
+	}
+	return query;
+}
+
+export const extractNumberFromLocationQueryValue = (query: LocationQueryValue | LocationQueryValue[] | undefined) => {
+	const stringValue = extractStringFromLocationQueryValue(query);
+	if (stringValue) {
+		return parseFloat(stringValue);
+	}
+	return undefined;
+}

@@ -5,7 +5,7 @@ import { DateTime } from 'luxon';
 export class CelestialBody {
 	protected dateTime: Date;
 	protected body: Astronomy.Body = Body.Star1;
-	protected geocentricLongitude: number = 0;
+	protected geocentricLongitude = 0;
 	
 	constructor(
 		date: string,

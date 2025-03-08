@@ -17,7 +17,7 @@ export default [
     files: ['**/*.ts', '**/*.vue'],
   },
   {
-    ignores: ['dist/**'],
+    ignores: ['dist/**', 'src/shims-vue.d.ts'],
   },
   {
     languageOptions: {

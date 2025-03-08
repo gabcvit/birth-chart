@@ -107,22 +107,21 @@ export default function useBirthChartCalculator(
 		};
 	};
 
-	const calculate = () => {
-		return {
-			sun: calculateSunSign(),
-			moon: calculateMoonSign(),
-			mercury: calculateMercurySign(),
-			venus: calculateVenusSign(),
-			mars: calculateMarsSign(),
-			jupiter: calculateJupiterSign(),
-			saturn: calculateSaturnSign(),
-			uranus: calculateUranusSign(),
-			neptune: calculateNeptuneSign(),
-			pluto: calculatePlutoSign(),
-		};
-	}
+	console.log(date,
+		time,
+		timeZone,
+		observer)
 
 	return {
-		calculate,
+		sun: calculateSunSign(),
+		moon: calculateMoonSign(),
+		mercury: calculateMercurySign(),
+		venus: calculateVenusSign(),
+		mars: calculateMarsSign(),
+		jupiter: calculateJupiterSign(),
+		saturn: calculateSaturnSign(),
+		uranus: calculateUranusSign(),
+		neptune: calculateNeptuneSign(),
+		pluto: calculatePlutoSign(),
 	};
 }

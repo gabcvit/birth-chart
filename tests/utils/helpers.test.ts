@@ -1,5 +1,5 @@
 import { calculateJulianDate } from '../../src/utils/helpers';
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect } from 'vitest'
 
 describe('helpers', () => {
 	const mockedDate = '1993-10-25';
