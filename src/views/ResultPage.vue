@@ -53,7 +53,7 @@ import { extractStringFromLocationQueryValue,
 	capitalize,
 	formatAngle,
 } from '../utils/helpers';
-import * as Astronomy from 'astronomy-engine';
+import { Observer} from 'astronomy-engine';
 
 const route = useRoute();
 const router = useRouter();
@@ -61,8 +61,8 @@ const router = useRouter();
 const birthtime = ref<string>(extractStringFromLocationQueryValue(route?.query.birthtime) || '');
 const latitude = ref<number>(extractNumberFromLocationQueryValue(route?.query.lat) || 0);
 const longitude = ref<number>(extractNumberFromLocationQueryValue(route?.query.lon) || 0);
-const observer = computed<Astronomy.Observer>(() => {
-	return new Astronomy.Observer(-22.9056391, -47.059564, 0);
+const observer = computed<Observer>(() => {
+	return new Observer(-22.9056391, -47.059564, 0);
 })
 const timeZone = ref<string>(extractStringFromLocationQueryValue(route?.query.timeZone) || '');
 const birthdate = ref<string>(extractStringFromLocationQueryValue(route?.query.birthdate) || '');
